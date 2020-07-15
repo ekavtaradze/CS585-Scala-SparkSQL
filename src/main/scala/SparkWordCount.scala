@@ -1,3 +1,4 @@
+import SparkWordCount.spark
 import org.apache.spark.sql.SparkSession
 
 object SparkWordCount extends App {
@@ -18,4 +19,10 @@ object SparkWordCount extends App {
     .reduceByKey(_ + _)
 
   counts.foreach(println)
+
+  case class Transaction(TransID: String, CustID: String, TransTotal: String, TransNumItems: String, TransDesc: String)
+
+  val transactions = spark.sparkContext.textFile("data/transactions.txt").map(_.split(",")).map(t =>
+      Transaction(t(0), t(1), t(2), t(3), t(4)))
+
 }
