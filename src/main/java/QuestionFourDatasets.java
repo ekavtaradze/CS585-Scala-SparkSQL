@@ -13,16 +13,13 @@ integer	values	for	each	entry.
     public static void main(String[] args) {
         try {
 
-            File  m1 = new File("dataQ4/M1.txt");
-            File m2 = new File("dataQ4/M2.txt");
+            File  m1 = new File("data/M1.txt");
+            File m2 = new File("data/M2.txt");
 
             BufferedWriter writer1 = new BufferedWriter(new FileWriter(m1));
             BufferedWriter writer2 = new BufferedWriter(new FileWriter(m2));
 
             MatrixPoint matrix;
-
-           // int x =0;
-         //   int y =0;
             for(int x =0; x< 500; x++){
                 for(int y =0; y< 500; y++){
                     matrix = new MatrixPoint(x, y);
