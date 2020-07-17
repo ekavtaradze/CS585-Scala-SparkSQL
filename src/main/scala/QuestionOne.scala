@@ -1,9 +1,8 @@
 //import QuestionOne.spark
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql._
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{StructType, StructField, StringType}
+import org.apache.spark.sql.types.{FloatType, IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.functions._
 
 object QuestionOne{
@@ -14,16 +13,32 @@ object QuestionOne{
       .appName("Question One")
       .getOrCreate()
 
-    case class Transaction(TransID: String, CustID: String, TransTotal: Float, TransNumItems: Int, TransDesc: String)
+  //  case class Transaction(TransID: String, CustID: String, TransTotal: Float, TransNumItems: Int, TransDesc: String)
+
+    import spark.sqlContext.implicits._
+
+    val transactionSchema = new StructType()
+      .add(StructField("TransID",StringType, true))
+      .add(StructField("CustID",StringType, true))
+      .add(StructField("TransTotal",FloatType, true))
+      .add(StructField("TransNumItems", IntegerType, true))
+      .add(StructField("TransDesc", StringType, true))
 
     import spark.sqlContext.implicits._
 
 
-    val T = spark.sparkContext.textFile("data/dummy.txt").map(_.split(",")).map(t =>
-      Transaction(t(0), t(1), t(2).toFloat, t(3).toInt, t(4)))
+
+    val matrix1RDD= spark.sparkContext.textFile("data/dummy.txt").map(_.split(","))
+      .map(t => Row(t(0), t(1), t(2).toFloat, t(3).toInt, t(4)))
+
+
+    val transactionsDF = spark.sqlContext.createDataFrame(matrix1RDD, transactionSchema)
+
+    /*val T = spark.sparkContext.textFile("data/dummy.txt").map(_.split(",")).map(t =>
+      Transaction(t(0), t(1), t(2).toFloat, t(3).toInt, t(4)))*/
 
     //start with transactions as Data Frame
-    val transactionsDF = T.toDF() //an RDD
+  //  val transactionsDF = T.toDF() //an RDD
 
     /*1) T1:	Filter	out	(drop)	the	transactions	from	T whose	total	amount	is	less	than	$200
 * */
