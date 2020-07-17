@@ -80,7 +80,7 @@ customer	ID,	and	the	transactions’	count.*/
     /*8) Report	back	T6	to	the	client	side*/
     T6.show()
 
-    spark.stop()
+   spark.stop()
 
   }
 

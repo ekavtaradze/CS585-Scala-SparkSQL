@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SparkScalaTest.iml" filepath="$PROJECT_DIR$/.idea/modules/SparkScalaTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SparkScalaTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/SparkScalaTest-build.iml" />
     </modules>
   </component>
 </project>
