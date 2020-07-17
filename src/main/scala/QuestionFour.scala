@@ -1,8 +1,9 @@
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.types.{IntegerType, StructField, StructType}
 
-object QuestionFour extends App{
-   // def main(args: Array[String]) {
+object QuestionFour{
+   def main(args: Array[String]) {
      /* val logFile = "README.md" // Should be some file on your system
       val spark = SparkSession.builder.master("local[*]").appName("Simple Application").getOrCreate()
       val logData = spark.read.textFile(logFile).cache()
@@ -11,34 +12,37 @@ object QuestionFour extends App{
       println(s"Lines with a: $numAs, Lines with b: $numBs")
       spark.stop()*/
 
-      val spark = SparkSession.builder
+     //val spark: SparkSession = SparkSession.builder.master("local").getOrCreate
+
+     val spark = SparkSession.builder
         .master("local[*]")
         .appName("Question One")
         .getOrCreate()
 
+     val sc = spark.sparkContext // Just used to create test RDDs
+
       case class Matrix(X: Int, Y: Int, Value: Int)
 
-      //val sqlContext= new org.apache.spark.sql.SQLContext(SparkContext)
 
+     val matrixSchema = new StructType()
+       .add(StructField("X",IntegerType, true))
+       .add(StructField("Y",IntegerType, true))
+       .add(StructField("Value",IntegerType, true))
 
-      //import sqlContext.implicits._
       import spark.sqlContext.implicits._
 
 
-      //Got Dataframes
-      val matrix1 = spark.sparkContext.textFile("data/M1.txt").map(_.split(",")).map(t =>
-        Matrix(t(0).toInt, t(1).toInt, t(2).toInt)).toDF()
-      val matrix2 = spark.sparkContext.textFile("data/M2.txt").map(_.split(",")).map(t =>
-        Matrix(t(0).toInt, t(1).toInt, t(2).toInt)).toDF().show()
 
-      //Map matrix 1 to Key: y   Value: M1, x, Value
-       //Map matrix 2 to Key: x   Value: M2, y, Value
-
-      //Reduce
-      ///Matrix1.X, Matrix2.Y, Matrix1 xy * Matrix 2 xy  = v
+     val matrix1RDD= spark.sparkContext.textFile("data/M1.txt").map(_.split(","))
+       .map(t => Row(t(0).toInt, t(1).toInt, t(2).toInt))
+     val matrix2RDD= spark.sparkContext.textFile("data/M2.txt").map(_.split(","))
+       .map(t => Row(t(0).toInt, t(1).toInt, t(2).toInt))
 
 
-      //start with transactions as Data Frame
-     // val transactionsDF = T.toDF() //an RDD
-  //  }
+     val matrix1DF = spark.sqlContext.createDataFrame(matrix1RDD, matrixSchema).show()
+     val matrix2DF = spark.sqlContext.createDataFrame(matrix2RDD, matrixSchema).show()
+
+
+  }
+
 }
