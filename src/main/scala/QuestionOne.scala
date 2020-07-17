@@ -1,12 +1,14 @@
 //import QuestionOne.spark
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql._
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{StructType, StructField, StringType}
 import org.apache.spark.sql.functions._
 
-object QuestionOne extends App {
+object QuestionOne{
 
+  def main(args: Array[String]) {
     val spark = SparkSession.builder
       .master("local[*]")
       .appName("Question One")
@@ -24,13 +26,13 @@ object QuestionOne extends App {
     val transactionsDF = T.toDF() //an RDD
 
     /*1) T1:	Filter	out	(drop)	the	transactions	from	T whose	total	amount	is	less	than	$200
-  * */
+* */
     val T1 = transactionsDF.where('TransTotal >= 200)
 
 
     /*T2:	Over	T1,	group	the	transactions	by	the	Number	of	Items	it	has, and	for	each	group
-    calculate	the	sum	of	total	amounts,	the	average	of	total	amounts,	the	min	and	the	max	of
-    the	total	amounts. */
+calculate	the	sum	of	total	amounts,	the	average	of	total	amounts,	the	min	and	the	max	of
+the	total	amounts. */
     val T2 = T1.groupBy("TransNumItems").agg(sum("TransTotal"), avg("TransTotal"),
       min("TransTotal"), max("TransTotal"))
 
@@ -40,7 +42,7 @@ object QuestionOne extends App {
 
 
     /*4) T3:	Over	T1,	group	the	transactions	by	customer	ID,	and	for	each	group	report	the
-      customer	ID,	and	the	transactions’	count*/
+  customer	ID,	and	the	transactions’	count*/
     val T3 = T1.groupBy("CustID").agg(count("TransID").as("Count"))
 
 
@@ -49,7 +51,7 @@ object QuestionOne extends App {
 
 
     /*6) T5:	Over	T4,	group	the	transactions	by	customer	ID,	and	for	each	group	report	the
-    customer	ID,	and	the	transactions’	count.*/
+customer	ID,	and	the	transactions’	count.*/
     val T5 = T4.groupBy('CustID).agg(count("TransID").as("Count"))
 
 
@@ -64,5 +66,7 @@ object QuestionOne extends App {
     T6.show()
 
     spark.stop()
+
+  }
 
 }
