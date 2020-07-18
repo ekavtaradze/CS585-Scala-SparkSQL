@@ -65,11 +65,31 @@ object QuestionFour {
     /*
     STARTING AGGREGATION
      */
-    //val m1Agg = reduce.select()
+    //val m1Agg = reduce.9select()
 
     val reduceGroupBy = reduceJoin.groupBy("I", "K")
-    val reduceSum = reduceGroupBy.sum("Value").show()
+    val reduceSum = reduceGroupBy.sum("Value").select($"I", $"K", $"sum(Value)".alias("Value"))
+    reduceSum.show()
+
+   //reduceSum.select($"I"+","+$"K"+","+","+$"Value").show()
+
+    import org.apache.spark.sql.functions.struct
+    val combinedColumns = reduceSum.withColumn("Total",
+      struct(reduceSum("I"), reduceSum("K"), reduceSum("Value"))).select("Total")
+      .map(_.toString().replace("[","").replace("]", "")).toDF()
+
+    combinedColumns.show()
+  //  combinedColumns.rdd.saveAsTextFile("output/Join.txt")
+
+    combinedColumns.rdd.saveAsTextFile("output")
+    //combinedColumns.write.text("output/Join.txt")
+
     // val grouped = joined
+
+    //reduceSum.rdd.saveAsTextFile("Join.txt")
+   // reduceSum.write.mode("append").csv("output/Join.csv")
+   // reduceSum.saveAsTextFile("output/Join.txt")
+    //reduceSum.map(a,b,c => Row())
 
 
   }
