@@ -1,4 +1,4 @@
-#Project 3 - CS 585
+# Project 3 - CS 585
 
 GROUP: Elene Kavtaradze and Michael Ludwig
 
